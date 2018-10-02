@@ -4,6 +4,9 @@ import pkgEnum.ePuzzleViolation;
 import pkgHelper.LatinSquare;
 import pkgHelper.PuzzleViolation;
 
+import java.security.SecureRandom;
+import java.util.Random;
+
 /**
  * Sudoku - This class extends LatinSquare, adding methods, constructor to
  * handle Sudoku logic
@@ -289,12 +292,14 @@ public class Sudoku extends LatinSquare {
 	
 	
 	private void FillDiagonaRegions() {
-		
-		
+		for (int i = 0; i < iSqrtSize; i++) {
+			SetRegion(i * (iSqrtSize + 1));
+			ShuffleRegion(i * (iSqrtSize + 1));
+		}
 	}
 	
 	
-	private void SetRegions(int r) {
+	private void SetRegion(int r) {
 		int i = (r / iSqrtSize) * iSqrtSize;
 		int j = (r % iSqrtSize) * iSqrtSize;		
 		int iMax = i + iSqrtSize;
@@ -303,33 +308,38 @@ public class Sudoku extends LatinSquare {
 		
 		for (; i < iMax; i++) {
 			for (j = (r % iSqrtSize) * iSqrtSize; j < jMax; j++) {
-				super.getLatinSquare()[i][j] = iCounter++;
+				this.getPuzzle()[i][j] = iCounter++;
 			}
 		}
 	}
 	
 	
-	private void ShuffleRegions(int r) {
+	private void ShuffleRegion(int r) {
 		int i = (r / iSqrtSize) * iSqrtSize;
 		int j = (r % iSqrtSize) * iSqrtSize;		
 		int iMax = i + iSqrtSize;
 		int jMax = j + iSqrtSize;
-		int iCounter = 1;
-		
+		int iCounter = 1;	
 		int[] reg = getRegion(r);
 		
 		for (; i < iMax; i++) {
 			for (j = (r % iSqrtSize) * iSqrtSize; j < jMax; j++) {
-				super.getLatinSquare()[i][j] = reg[iCounter++];
+				this.getPuzzle()[i][j] = reg[iCounter++];
 			}
 		}
-
 	}
 	
 	
 	private void shuffleArray(int[] ar) {
+		Random random = new SecureRandom();
 		
-		
+		for (int i = ar.length - 1; i > 0; i--) {
+			int index = random.nextInt(i+1);
+			int r = ar[index];
+			ar[index] = ar[i];
+			ar[i] = r;
+		}
 	}
+
 	
 }
